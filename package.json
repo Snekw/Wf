@@ -1,0 +1,14 @@
+{
+  "name": "wfapi",
+  "version": "0.0.0",
+  "description": "Snekw was too lazy to implement lua to json parser in javascript so he made a api to get it with the help of Lua.\"",
+  "main": "srv.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ilkka Kuosmanen",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
