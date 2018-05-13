@@ -21,7 +21,7 @@
 const spawn = require('child_process').spawn;
 function getData (input) {
   return new Promise((resolve, reject) => {
-    let luaCmd = 'lua';
+    let luaCmd = 'lua5.3';
     if(process.platform === "win32"){
       luaCmd = './lua/lua_bin/lua53.exe';
     }
