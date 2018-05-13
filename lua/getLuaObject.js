@@ -21,7 +21,11 @@
 const spawn = require('child_process').spawn;
 function getData (input) {
   return new Promise((resolve, reject) => {
-    let luaToJson = spawn('./lua/lua_bin/lua53.exe', ['./lua/lua_bin/luaObjectToJson.lua']);
+    let luaCmd = 'lua';
+    if(process.platform === "win32"){
+      luaCmd = './lua/lua_bin/lua53.exe';
+    }
+    let luaToJson = spawn(luaCmd, ['./lua/luaObjectToJson.lua']);
 
     luaToJson.stderr.pipe(process.stderr);
     luaToJson.stdin.setEncoding('utf-8');
