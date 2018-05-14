@@ -1,4 +1,4 @@
-json = require "json"
+local json = require "json"
 
 local data = io.read("*a")
 local f = load(data)
