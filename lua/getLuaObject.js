@@ -19,11 +19,12 @@
  */
 'use strict';
 const spawn = require('child_process').spawn;
+
 function getData (input) {
   return new Promise((resolve, reject) => {
     let luaCmd = 'lua5.3';
-    let luaParams = [ './luaObjectToJson.lua'];
-    if(process.platform === "win32"){
+    let luaParams = ['./luaObjectToJson.lua'];
+    if (process.platform === 'win32') {
       luaCmd = './lua53.exe';
     }
     let luaToJson = spawn(luaCmd, luaParams, {cwd: __dirname});
@@ -42,14 +43,16 @@ function getData (input) {
       err += d;
     });
     luaToJson.stderr.on('end', (d) => {
-      return reject(err);
+      if (err.length > 0) {
+        return reject(err);
+      }
     });
     luaToJson.stdout.on('end', (c) => {
       let d = '';
       try {
         d = JSON.parse(data);
         return resolve(d);
-      }catch (e) {
+      } catch (e) {
         return reject(e);
       }
     });

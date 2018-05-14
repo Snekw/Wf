@@ -29,7 +29,7 @@ let cachedData = null;
 let lastCacheRefresh = null;
 
 app.get('/weapons-data', function (req, res, next) {
-  if(!cachedData || !lastCacheRefresh || lastCacheRefresh + 1000*60*60 < Date.now()) {
+  if (!cachedData || !lastCacheRefresh || lastCacheRefresh + 1000 * 60 * 60 < Date.now()) {
     https.get(wfWeaponsDataUrl, (wfRes) => {
       let data = '';
       wfRes.on('data', (d) => {
@@ -39,18 +39,18 @@ app.get('/weapons-data', function (req, res, next) {
       wfRes.on('end', () => {
         let parsed = JSON.parse(data.toString());
         let actual = parsed.query.pages[1175547].revisions[0];
-        getLuaObject(actual['*']).then(data=>{
+        getLuaObject(actual['*']).then(data => {
           cachedData = data;
           lastCacheRefresh = Date.now();
           return res.status(200).json({data: data});
-        }).catch(err=>{
+        }).catch(err => {
           return res.status(500).json({error: 'Failed to parse weapon data.'});
-        })
+        });
       });
     }).on('error', (e) => {
       return res.status(500).json({error: 'Failed to fetch weapon data.'});
     });
-  }else{
+  } else {
     return res.status(200).json({data: cachedData});
   }
 });
