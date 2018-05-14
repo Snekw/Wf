@@ -38,7 +38,6 @@ app.get('/weapons-data', function (req, res, next) {
 
       wfRes.on('end', () => {
         let parsed = JSON.parse(data.toString());
-        console.log(data);
         let actual = parsed.query.pages[1175547].revisions[0];
         getLuaObject(actual['*']).then(data=>{
           cachedData = data;

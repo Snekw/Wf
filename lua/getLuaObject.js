@@ -46,7 +46,13 @@ function getData (input) {
       return reject(err);
     });
     luaToJson.stdout.on('end', (c) => {
-      return resolve(JSON.parse(data));
+      let d = '';
+      try {
+        d = JSON.parse(data);
+        return resolve(d);
+      }catch (e) {
+        return reject(e);
+      }
     });
   });
 }
