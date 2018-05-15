@@ -12,13 +12,21 @@ that may sometimes go down because of other things thar are running on it. If th
 
 ### Currently existing API endpoints
 
-| Api url | Description |
+| Api url | Module |
 | ------- | ----------- |
-| /weapons-wiki | Returns JSON data from the Lua module [Module:Weapons/data](http://warframe.wikia.com/wiki/Module:Weapons/data) |
-| /mods-wiki | Returns JSON data from the Lua module [Module:Mods/data](http://warframe.wikia.com/wiki/Module:Mods/data) |
-| /icons-wiki |Returns JSON data from the Lua module [Module:Icon/data](http://warframe.wikia.com/wiki/Module:Icon/data) |
-| /void-wiki |Returns JSON data from the Lua module [Module:Void/data](http://warframe.wikia.com/wiki/Module:Void/data) |
-| /version-wiki |Returns JSON data from the Lua module [Module:Version/data](http://warframe.wikia.com/wiki/Module:Version/data) |
+| /weapons-wiki |  [Module:Weapons/data](http://warframe.wikia.com/wiki/Module:Weapons/data) |
+| /mods-wiki |  [Module:Mods/data](http://warframe.wikia.com/wiki/Module:Mods/data) |
+| /icons-wiki | [Module:Icon/data](http://warframe.wikia.com/wiki/Module:Icon/data) |
+| /void-wiki | [Module:Void/data](http://warframe.wikia.com/wiki/Module:Void/data) |
+| /version-wiki | [Module:Version/data](http://warframe.wikia.com/wiki/Module:Version/data) |
+| /warframes-wiki | [Module:Warframes/data](http://warframe.wikia.com/wiki/Module:Warframes/data) |
+| /warframesConclave-wiki | [Module:Warframes/Conclave/data](http://warframe.wikia.com/wiki/Module:Warframes/Conclave/data) |
+| /ability-wiki | [Module:Ability/data](http://warframe.wikia.com/wiki/Module:Ability/data) |
+| /focus-wiki | [Module:Focus/data](http://warframe.wikia.com/wiki/Module:Focus/data) |
+| /missions-wiki | [Module:Missions/data](http://warframe.wikia.com/wiki/Module:Missions/data) |
+| /research-wiki | [Module:Research/data](http://warframe.wikia.com/wiki/Module:Research/data) |
+| /arcane-wiki | [Module:Arcane/data](http://warframe.wikia.com/wiki/Module:Arcane/data) |
+| /syndicates-wiki | [Module:Syndicates/data](http://warframe.wikia.com/wiki/Module:Syndicates/data) |
 
 All of the API endpoints also have a `/meta` route. That route can be used to get the metadata of the latest
 data. Example for `/weapons-wiki` the hash route would be `/weapons-wiki/meta` and the returned data would be:

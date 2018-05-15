@@ -19,6 +19,7 @@
  */
 'use strict';
 const spawn = require('child_process').spawn;
+const CustomError = require('../error').CustomError;
 
 function getData (input) {
   return new Promise((resolve, reject) => {
@@ -28,6 +29,10 @@ function getData (input) {
       luaCmd = './lua53.exe';
     }
     let luaToJson = spawn(luaCmd, luaParams, {cwd: __dirname});
+
+    // Change the sparse arrays that can contain a negative index to string keys.
+    let r = /\[([-\d]{1,2})\]/g;
+    input = input.replace(r, '["$1"]');
 
     luaToJson.stderr.pipe(process.stderr);
     luaToJson.stdin.setEncoding('utf-8');
@@ -49,6 +54,9 @@ function getData (input) {
     });
     luaToJson.stdout.on('end', (c) => {
       let d = '';
+      if(data.length === 0){
+        return reject(new CustomError('Lua parsing failed.'));
+      }
       try {
         d = JSON.parse(data);
         return resolve(d);

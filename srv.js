@@ -55,7 +55,7 @@ let cache = {
   focus: new Cache(wfFocusDataUrl, 'Focus'),
   missions: new Cache(wfMissionsDataUrl, 'Missions'),
   research: new Cache(wfResearchDataUrl, 'Research'),
-  arcanes: new Cache(wfArcaneDataUrl, 'Arcane'),
+  arcane: new Cache(wfArcaneDataUrl, 'Arcane'),
   syndicates: new Cache(wfSyndicatesDataUrl, 'Syndicates')
 };
 
