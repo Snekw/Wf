@@ -21,12 +21,14 @@
 const https = require('https');
 const crypto = require('crypto');
 const getLuaObject = require('./lua/getLuaObject');
+const CustomError = require('./error').CustomError;
 
 /**
  * @typedef {Object} MetaObject
  * @property {number} lastRefresh The last refresh js timestamp.
  * @property {number} nRefresh How many times the cache has been refreshed.
- * @property {string} hash A hash of the data.
+ * @property {PromiseLike<ArrayBuffer>} hash A hash of the data.
+ * @property {string} license The license under which the data is licensed.
  */
 
 /**
@@ -47,7 +49,7 @@ class Cache {
   constructor (dataUrl, name) {
     this.data = null;
     this.name = name;
-    this.lastRefresh = null;
+    this.lastRefresh = 0;
     this.nRefresh = 0;
     this.dataUrl = dataUrl;
     this.get().then(() => {
@@ -82,7 +84,7 @@ class Cache {
   /**
    * Make a 'GET' request to given Wikia url and get the data inside of the lua object.
    * @param {string} url Wikia api url.
-   * @returns {Promise<object, Error>} The content of the lua object.
+   * @returns {Promise<object, Object>} The content of the lua object.
    * @private
    */
   static _getRequest (url) {
@@ -95,7 +97,7 @@ class Cache {
 
         res.on('end', () => {
           if (data.length === 0) {
-            return reject('No data');
+            return reject(new CustomError('No data.'));
           }
           try {
             let parsed = JSON.parse(data.toString());
@@ -105,21 +107,21 @@ class Cache {
                 return resolve(data);
               })
               .catch(err => {
-                return reject(err);
+                return reject(new CustomError('Failed to get lua data.', err));
               });
           } catch (e) {
-            return reject(e);
+            return reject(new CustomError('Failed to parse or find revisions.', e));
           }
         });
       }).on('error', err => {
-        return reject(err);
+        return reject(new CustomError('Failed to retrieve data.', err));
       });
     });
   }
 
   /**
    * Create a sha256 hash of the cached data.
-   * @returns {string} Base64 encoded hash.
+   * @returns {PromiseLike<ArrayBuffer>} Base64 encoded hash.
    */
   createHash () {
     let hash = crypto.createHash('sha256');
@@ -131,12 +133,13 @@ class Cache {
    * Create a meta data object.
    * @returns {MetaObject}
    */
-  createMeta(){
+  createMeta () {
     return {
       nRefresh: this.nRefresh,
       lastRefresh: this.lastRefresh,
-      hash: this.createHash()
-    }
+      hash: this.createHash(),
+      license: 'CC BY-SA'
+    };
   }
 
   /**
@@ -158,10 +161,10 @@ class Cache {
               });
             })
             .catch(err => {
-              return reject(err);
+              return reject(new CustomError('Failed at requesting data.', err));
             });
         } else {
-          return reject('No data url.');
+          return reject(new CustomError('No data url.', {}, {name: this.name}));
         }
       } else {
         return resolve({
@@ -183,7 +186,7 @@ class Cache {
           return resolve({meta: this.createMeta()});
         })
         .catch(e => {
-          return reject(e);
+          return reject(new CustomError('Failed to generate meta object.', e));
         });
     });
   }
