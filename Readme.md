@@ -38,10 +38,10 @@ Example return for `/weapons-data`:
 ```json
 {
     "data": {
-      "Augments": [{}, {}, ...],
-      "IgnoreInCount": ["", "", ...],
-      "Stances": [{}, {}, ...],
-      "Weapons": [{}, {}, ...]
+      "Augments": [{}, {}],
+      "IgnoreInCount": ["", ""],
+      "Stances": [{}, {}],
+      "Weapons": [{}, {}]
     },
     "meta": {
         "nRefresh": 1,

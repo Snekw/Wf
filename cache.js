@@ -22,7 +22,28 @@ const https = require('https');
 const crypto = require('crypto');
 const getLuaObject = require('./lua/getLuaObject');
 
+/**
+ * @typedef {Object} MetaObject
+ * @property {number} lastRefresh The last refresh js timestamp.
+ * @property {number} nRefresh How many times the cache has been refreshed.
+ * @property {string} hash A hash of the data.
+ */
+
+/**
+ * @typedef {Object} ResponseObject
+ * @property {Object} data Response data.
+ * @property {MetaObject} meta Metadata for the response.
+ */
+
+/**
+ * A cache module class.
+ */
 class Cache {
+  /**
+   * Create a new cache module.
+   * @param {string} dataUrl Url to the Wikia module.
+   * @param {string} name Name of the cache module.
+   */
   constructor (dataUrl, name) {
     this.data = null;
     this.name = name;
@@ -37,6 +58,12 @@ class Cache {
     });
   }
 
+  /**
+   * Find the 'revisions' object from the given object.
+   * @param {object} data The object from which the 'revisions' object is searched for.
+   * @returns {object} The data inside revisions object.
+   * @private
+   */
   static _findRevisions (data) {
     if ('revisions' in data && data.hasOwnProperty('revisions')) {
       return data['revisions'][0]['*'];
@@ -52,6 +79,12 @@ class Cache {
     return null;
   }
 
+  /**
+   * Make a 'GET' request to given Wikia url and get the data inside of the lua object.
+   * @param {string} url Wikia api url.
+   * @returns {Promise<object, Error>} The content of the lua object.
+   * @private
+   */
   static _getRequest (url) {
     return new Promise((resolve, reject) => {
       https.get(url, res => {
@@ -84,12 +117,20 @@ class Cache {
     });
   }
 
+  /**
+   * Create a sha256 hash of the cached data.
+   * @returns {string} Base64 encoded hash.
+   */
   createHash () {
     let hash = crypto.createHash('sha256');
     hash.update(JSON.stringify(this.data));
     return hash.digest('base64');
   }
 
+  /**
+   * Create a meta data object.
+   * @returns {MetaObject}
+   */
   createMeta(){
     return {
       nRefresh: this.nRefresh,
@@ -98,6 +139,10 @@ class Cache {
     }
   }
 
+  /**
+   * Get the cached data or refresh the cache.
+   * @returns {Promise<ResponseObject,Object>} Returns the cached data object.
+   */
   get () {
     return new Promise((resolve, reject) => {
       if (!this.data || !this.lastRefresh || this.lastRefresh + 1000 * 60 * 60 < Date.now()) {
@@ -127,6 +172,10 @@ class Cache {
     });
   }
 
+  /**
+   * Get the meta data for cache module
+   * @returns {Promise<MetaObject, Object>} The metadata object for cache module.
+   */
   getMeta () {
     return new Promise((resolve, reject) => {
       this.get()

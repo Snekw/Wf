@@ -19,20 +19,21 @@
  */
 'use strict';
 const exrpess = require('express');
-const https = require('https');
-const getLuaObject = require('./lua/getLuaObject');
 const app = exrpess();
 const Cache = require('./cache');
 
+// Base url and query for Warframe Wikia api.
 const baseUrl = 'https://warframe.wikia.com/api.php?';
 const query = 'action=query&prop=revisions&rvprop=content&format=json&formatversion=2&titles=';
 
+// The url encoded api urls for the different Wikia modules.
 const wfWeaponsDataUrl = baseUrl + query + 'Module%3AWeapons%2Fdata';
 const wfModsDataUrl = baseUrl + query + 'Module%3AMods%2Fdata';
 const wfIconDataUrl = baseUrl + query + 'Module%3AIcon%2Fdata';
 const wfVoidDataUrl = baseUrl + query + 'Module%3AVoid%2Fdata';
 const wfVersionDataUrl = baseUrl + query + 'Module%3AVersion%2Fdata';
 
+// The object that contains all of the cache modules and is used to generate routes.
 let cache = {
   weapons: new Cache(wfWeaponsDataUrl, 'Weapons'),
   mods: new Cache(wfModsDataUrl, 'Mods'),
@@ -41,6 +42,11 @@ let cache = {
   version: new Cache(wfVersionDataUrl, 'Version')
 };
 
+/**
+ * Get the middleware for specific cache module.
+ * @param which Cache module
+ * @returns {Function} Express middleware
+ */
 function cacheRequest (which) {
   return function (req, res, next) {
     which.get()
@@ -53,6 +59,11 @@ function cacheRequest (which) {
   };
 }
 
+/**
+ * Get the meta middleware for specific cache module
+ * @param which Cache module
+ * @returns {Function} Express middleware
+ */
 function cacheMeta (which) {
   return function (req, res, next) {
     which.getMeta()
