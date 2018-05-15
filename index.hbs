@@ -1,0 +1,135 @@
+<!-- 
+/**
+ *  This file is part of wfApi.
+ *
+ *  wfApi is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  wfApi is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with wfApi.  If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Desciption" content="A Warframe JSON data API. Help, API url list and general information.">
+    <title>Snekw's Warframe JSON data api.</title>
+    <style>
+        table {
+            width: 700px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+
+        p {
+            max-width: 800px;
+        }
+    </style>
+</head>
+</html>
+<body>
+<h1>Snekw's Warframe JSON api.</h1>
+<p>
+    This is API contains methods to get the Warframe data that is available from <a
+        href="http://warframe.wikia.com/wiki/WARFRAME_Wiki">Warframe Wikia</a>.<br>
+    To use the data you can make a GET request to this site with url that is listed in Table 1.
+</p>
+<label for="apiTable">Table 1. Api urls.</label>
+<table id="apiTable">
+    <tr>
+        <th>URL</th>
+        <th>Module</th>
+        <th>Meta</th>
+    </tr>
+    {{#each apiUrls}}
+        <tr>
+            <td><a href="{{this.url}}">{{this.url}}</a></td>
+            <td><a href="http://warframe.wikia.com/{{this.module}}">{{this.module}}</a></td>
+            <td><a href="{{this.url}}/meta">{{this.url}}/meta</a></td>
+        </tr>
+    {{/each}}
+</table>
+
+<h2>Route return data</h2>
+<p>
+    All of the routes return data that is formatted like the JSON below.
+</p>
+<pre><code>
+{
+    "data": {
+      "Augments": [{}, {}],
+      "IgnoreInCount": ["", ""],
+      "Stances": [{}, {}],
+      "Weapons": [{}, {}]
+    },
+    "meta":{
+        "hash": "i8SU5J2zdHWysebbdgHMStR8GgbcPgl9zTDi++ehwCo=",
+        "lastRefresh": 1526392841985,
+        "nRefresh": 1,
+        "license": "CC BY-SA"
+    }
+}
+</code></pre>
+<p>
+    The "data" object contains all of the data that is contained in the actual Lua module that is retrieved from
+    Wikia.
+</p>
+
+<h2>The */meta route</h2>
+<p>
+    All of the API url's have /meta sub-route. This route can be used to get metadata information of the data that is
+    currently cached on the server. The returned data is same as the normal route but the "data" object is dropped
+    to achieve smaller response size.
+</p>
+<p>Example of the /meta route return data.</p>
+<pre><code>
+{
+    "meta":{
+        "hash": "i8SU5J2zdHWysebbdgHMStR8GgbcPgl9zTDi++ehwCo=",
+        "lastRefresh": 1526392841985,
+        "nRefresh": 1,
+        "license": "CC BY-SA"
+    }
+}
+</code></pre>
+
+<h2>Headers</h2>
+<p>
+    The server tells it version using a X-Api-Version header. The version is a short version of the latest commit hash.
+</p>
+
+<h2>Statistics</h2>
+<p>
+    By using this service you allow the service to collect really basic statistics of the use of the service.
+    Below you can see all of the statistics the server collects.
+</p>
+<label for="statsTable">Table 2. Api urls.</label>
+<table id="statsTable">
+    <tr>
+        <th>Name</th>
+        <th>Value</th>
+    </tr>
+    {{#each stats}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.value}}</td>
+        </tr>
+    {{/each}}
+</table>
+</body>

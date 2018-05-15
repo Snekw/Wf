@@ -19,9 +19,12 @@
  */
 'use strict';
 const exrpess = require('express');
+const hbs = require('hbs');
 const app = exrpess();
 const Cache = require('./cache');
 const error = require('./error');
+const fs = require('fs');
+const stats = require('./stats');
 
 // Base url and query for Warframe Wikia api.
 const baseUrl = 'https://warframe.wikia.com/api.php?';
@@ -46,11 +49,11 @@ const wfSyndicatesDataUrl = baseUrl + query + 'Module%3ASyndicates%2Fdata';
 let cache = {
   weapons: new Cache(wfWeaponsDataUrl, 'Weapons'),
   mods: new Cache(wfModsDataUrl, 'Mods'),
-  icons: new Cache(wfIconDataUrl, 'Icons'),
+  icon: new Cache(wfIconDataUrl, 'Icon'),
   void: new Cache(wfVoidDataUrl, 'Void'),
   version: new Cache(wfVersionDataUrl, 'Version'),
   warframes: new Cache(wfWarframeDataUrl, 'Warframes'),
-  warframesConclave: new Cache(wfWarframeConclaveDataUrl, 'WarframesConclave'),
+  warframesConclave: new Cache(wfWarframeConclaveDataUrl, 'Warframes/Conclave'),
   ability: new Cache(wfAbilityDataUrl, 'Ability'),
   focus: new Cache(wfFocusDataUrl, 'Focus'),
   missions: new Cache(wfMissionsDataUrl, 'Missions'),
@@ -59,12 +62,21 @@ let cache = {
   syndicates: new Cache(wfSyndicatesDataUrl, 'Syndicates')
 };
 
-// Get the latest git commit short sha
+// Get the latest git commit short hash.
 const version = require('child_process')
   .execSync('git rev-parse --short HEAD')
   .toString().trim();
 
+// Stats recording
+let statManager = new stats.StatManager();
+statManager.registerStat('Requests', 'smh');
+statManager.registerStat('Meta Requests', 'smh');
+statManager.registerStat('Data Requests', 'smh');
+statManager.registerStat('Errors', 'smh');
+
+// Set response headers for all of the routes.
 app.use(function (req, res, next) {
+  statManager.hit('Requests');
   res.setHeader('X-Api-Version', version);
   next();
 });
@@ -76,6 +88,7 @@ app.use(function (req, res, next) {
  */
 function cacheRequest (which) {
   return function (req, res, next) {
+    statManager.hit('Data Requests');
     which.get()
       .then(data => {
         return res.status(200).json(data);
@@ -93,6 +106,7 @@ function cacheRequest (which) {
  */
 function cacheMeta (which) {
   return function (req, res, next) {
+    statManager.hit('Meta Requests');
     which.getMeta()
       .then(data => {
         return res.status(200).json(data);
@@ -112,7 +126,35 @@ for (let key in cache) {
   app.get('/' + key + '-wiki/meta', cacheMeta(cache[key]));
 }
 
-// Serve the ./static folder for the index page and robots.txt
+// Use handlebars view engine to show index page
+let indexHbs = hbs.compile(fs.readFileSync('./index.hbs').toString());
+
+let apiUrls = [];
+for (let key in cache) {
+  if (!cache.hasOwnProperty(key)) {
+    continue;
+  }
+  apiUrls.push({
+    url: '/' + key + '-wiki',
+    module: 'Module:' + cache[key].name + '/data'
+  });
+}
+
+app.use('/', function (req, res, next) {
+  if (req.originalUrl !== '/') {
+    return next();
+  }
+  // Recompile the page when running in development environment
+  if (process.env.NODE_ENV === 'development') {
+    indexHbs = hbs.compile(fs.readFileSync('./index.hbs').toString());
+  }
+  return res.send(indexHbs({
+    apiUrls: apiUrls,
+    stats: statManager.getArray()
+  }));
+});
+
+// Serve the ./static folder for the idex page style and robots.txt
 app.use('/', exrpess.static('./static'));
 
 // Route not found handler.
@@ -122,6 +164,7 @@ app.use(function (req, res, next) {
 
 // Final error handler.
 app.use(function (err, req, res, next) {
+  statManager.hit('Errors');
   let status = 500;
   if (err.message === '404') {
     status = 404;

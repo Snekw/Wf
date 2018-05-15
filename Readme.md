@@ -16,7 +16,7 @@ that may sometimes go down because of other things thar are running on it. If th
 | ------- | ----------- |
 | /weapons-wiki |  [Module:Weapons/data](http://warframe.wikia.com/wiki/Module:Weapons/data) |
 | /mods-wiki |  [Module:Mods/data](http://warframe.wikia.com/wiki/Module:Mods/data) |
-| /icons-wiki | [Module:Icon/data](http://warframe.wikia.com/wiki/Module:Icon/data) |
+| /icon-wiki | [Module:Icon/data](http://warframe.wikia.com/wiki/Module:Icon/data) |
 | /void-wiki | [Module:Void/data](http://warframe.wikia.com/wiki/Module:Void/data) |
 | /version-wiki | [Module:Version/data](http://warframe.wikia.com/wiki/Module:Version/data) |
 | /warframes-wiki | [Module:Warframes/data](http://warframe.wikia.com/wiki/Module:Warframes/data) |
@@ -27,6 +27,8 @@ that may sometimes go down because of other things thar are running on it. If th
 | /research-wiki | [Module:Research/data](http://warframe.wikia.com/wiki/Module:Research/data) |
 | /arcane-wiki | [Module:Arcane/data](http://warframe.wikia.com/wiki/Module:Arcane/data) |
 | /syndicates-wiki | [Module:Syndicates/data](http://warframe.wikia.com/wiki/Module:Syndicates/data) |
+
+> NOTE: For most up to date API info see [http://wf.snekw.com](http://wf.snekw.com)!
 
 All of the API endpoints also have a `/meta` route. That route can be used to get the metadata of the latest
 data. Example for `/weapons-wiki` the hash route would be `/weapons-wiki/meta` and the returned data would be:
