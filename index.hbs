@@ -21,7 +21,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="Desciption" content="A Warframe JSON data API. Help, API url list and general information.">
+    <meta name="Description" content="A Warframe JSON data API. Help, API url list and general information.">
     <title>Snekw's Warframe JSON data api.</title>
     <style>
         table {
@@ -108,6 +108,12 @@
     }
 }
 </code></pre>
+<p>
+    This route can be used as a pre-update check to save bandwidth. For example the `/weapons-data` route returns at the time
+    of writing this 281 KB of data and the `/weapons-data/meta` returns only 297 B of data. Response latency is almost same
+    for both of the routes as they do almost same things server side.
+</p>
+
 
 <h2>Headers</h2>
 <p>
@@ -132,4 +138,12 @@
         </tr>
     {{/each}}
 </table>
+
+<h1>Licensing</h1>
+<p>
+    The source code for this API is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.txt">GPL-3.0</a>.
+    All of the data under routes that end in -wiki are licensed
+    under <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a>.<br><br>
+    This project in no way affiliated with either Warframe Wikia or Digital Extremes.
+</p>
 </body>
