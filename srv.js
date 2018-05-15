@@ -22,37 +22,56 @@ const exrpess = require('express');
 const https = require('https');
 const getLuaObject = require('./lua/getLuaObject');
 const app = exrpess();
+const Cache = require('./cache');
 
-const wfWeaponsDataUrl = 'https://warframe.wikia.com/api.php?action=query&prop=revisions&rvprop=content&format=json&formatversion=2&titles=Module%3AWeapons%2Fdata';
+const baseUrl = 'https://warframe.wikia.com/api.php?';
+const query = 'action=query&prop=revisions&rvprop=content&format=json&formatversion=2&titles=';
 
-let cachedData = null;
-let lastCacheRefresh = null;
+const wfWeaponsDataUrl = baseUrl + query + 'Module%3AWeapons%2Fdata';
+const wfModsDataUrl = baseUrl + query + 'Module%3AMods%2Fdata';
+const wfIconDataUrl = baseUrl + query + 'Module%3AIcon%2Fdata';
+const wfVoidDataUrl = baseUrl + query + 'Module%3AVoid%2Fdata';
+const wfVersionDataUrl = baseUrl + query + 'Module%3AVersion%2Fdata';
 
-app.get('/weapons-data', function (req, res, next) {
-  if (!cachedData || !lastCacheRefresh || lastCacheRefresh + 1000 * 60 * 60 < Date.now()) {
-    https.get(wfWeaponsDataUrl, (wfRes) => {
-      let data = '';
-      wfRes.on('data', (d) => {
-        data += d;
+let cache = {
+  weapons: new Cache(wfWeaponsDataUrl, 'Weapons'),
+  mods: new Cache(wfModsDataUrl, 'Mods'),
+  icons: new Cache(wfIconDataUrl, 'Icons'),
+  void: new Cache(wfVoidDataUrl, 'Void'),
+  version: new Cache(wfVersionDataUrl, 'Version')
+};
+
+function cacheRequest (which) {
+  return function (req, res, next) {
+    which.get()
+      .then(data => {
+        return res.status(200).json(data);
+      })
+      .catch(err => {
+        return res.status(500).json({error: err});
       });
+  };
+}
 
-      wfRes.on('end', () => {
-        let parsed = JSON.parse(data.toString());
-        let actual = parsed.query.pages[1175547].revisions[0];
-        getLuaObject(actual['*']).then(data => {
-          cachedData = data;
-          lastCacheRefresh = Date.now();
-          return res.status(200).json({data: data});
-        }).catch(err => {
-          return res.status(500).json({error: 'Failed to parse weapon data.'});
-        });
+function cacheMeta (which) {
+  return function (req, res, next) {
+    which.getMeta()
+      .then(data => {
+        return res.status(200).json(data);
+      })
+      .catch(err => {
+        return res.status(500).json({error: err});
       });
-    }).on('error', (e) => {
-      return res.status(500).json({error: 'Failed to fetch weapon data.'});
-    });
-  } else {
-    return res.status(200).json({data: cachedData});
+  };
+}
+
+// Create the routes.
+for(let key in cache){
+  if(!cache.hasOwnProperty(key)){
+    continue;
   }
-});
+  app.get('/' + key + '-data', cacheRequest(cache[key]));
+  app.get('/' + key + '-data/meta', cacheMeta(cache[key]));
+}
 
 app.listen('8090');
