@@ -27,7 +27,7 @@ const fs = require('fs');
 const stats = require('./stats');
 
 // Base url and query for Warframe Wikia api.
-const baseUrl = 'https://warframe.wikia.com/api.php?';
+const baseUrl = 'https://warframe.fandom.com/api.php?';
 const query = 'action=query&prop=revisions&rvprop=content&format=json&formatversion=2&titles=';
 
 // The url encoded api urls for the different Wikia modules.

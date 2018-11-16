@@ -40,17 +40,17 @@ class Stat {
     let date = new Date;
     if (this.flags.indexOf('s') > -1) {
       this.minuteBufferIndex = date.getSeconds();
-      let secondInterval = setInterval(this._clearNextSecond, 1000, this);
+      let secondInterval = setInterval(Stat._clearNextSecond, 1000, this);
       secondInterval.unref();
     }
     if (this.flags.indexOf('m') > -1) {
       this.hourBufferIndex = date.getMinutes();
-      let minuteInterval = setInterval(this._clearNextMinute, 1000 * 60, this);
+      let minuteInterval = setInterval(Stat._clearNextMinute, 1000 * 60, this);
       minuteInterval.unref();
     }
     if (this.flags.indexOf('h') > -1) {
       this.dayBufferIndex = date.getHours();
-      let hourInterval = setInterval(this._clearNextHour, 1000 * 60 * 60, this);
+      let hourInterval = setInterval(Stat._clearNextHour, 1000 * 60 * 60, this);
       hourInterval.unref();
     }
   }
@@ -118,7 +118,7 @@ class Stat {
     }
   }
 
-  _clearNextSecond (obj) {
+  static _clearNextSecond (obj) {
     obj.minuteBuffer[obj.minuteBufferIndex] = 0;
     obj.minuteBufferIndex++;
     if (obj.minuteBufferIndex > 59) {
@@ -126,7 +126,7 @@ class Stat {
     }
   }
 
-  _clearNextMinute (obj) {
+  static _clearNextMinute (obj) {
     obj.hourBuffer[obj.hourBufferIndex] = 0;
     obj.hourBufferIndex++;
     if (obj.hourBufferIndex > 59) {
@@ -134,7 +134,7 @@ class Stat {
     }
   }
 
-  _clearNextHour (obj) {
+  static _clearNextHour (obj) {
     obj.dayBuffer[obj.dayBufferIndex] = 0;
     obj.dayBufferIndex++;
     if (obj.dayBufferIndex > 59) {
