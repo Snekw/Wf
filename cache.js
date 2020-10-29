@@ -68,7 +68,7 @@ class Cache {
    */
   static _findRevisions (data) {
     if ('revisions' in data && data.hasOwnProperty('revisions')) {
-      return data['revisions'][0]['*'];
+      return data['revisions'][0]['slots']['main']['content'];
     }
     for (let key in data) {
       if (!data.hasOwnProperty(key)) {
