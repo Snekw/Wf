@@ -1,7 +1,7 @@
 # Random Warframe data api
 
-Random set of Warframe data API endpoints that retrieve data from the [Warframe Wikia.](https://warframe.wikia.com)
-If you use this service and notice that there is data missing please contribute to the Warframe Wikia. The data you
+Random set of Warframe data API endpoints that retrieve data from the [Warframe Wiki.](https://warframe.fandom.com/)
+If you use this service and notice that there is data missing please contribute to the Warframe Wiki. The data you
 contribute will be included in responses within one hour of the update of data at the Wikia.
 
 # Use of service
@@ -103,8 +103,12 @@ In any normal API use cases the stack trace and full error object will both be e
 * Lua 5.3
 * Node.js 9.9.0 or higher
 
+# Source
+
+https://github.com/Snekw/Wf
+
 # License
 
 The source code is licensed under GPL-3.0.
 
-All of the Warframe data is from [Warframe Wikia](https://warframe.wikia.com) and is licensed under CC BY-SA license.
+All of the Warframe data is from [Warframe Wiki](https://warframe.fandom.com/) and is licensed under CC BY-SA license.
