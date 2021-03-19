@@ -103,10 +103,6 @@ In any normal API use cases the stack trace and full error object will both be e
 * Lua 5.3
 * Node.js 9.9.0 or higher
 
-# Source
-
-https://github.com/Snekw/Wf
-
 # License
 
 The source code is licensed under GPL-3.0.

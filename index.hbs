@@ -47,7 +47,7 @@
 <h1>Snekw's Warframe JSON api.</h1>
 <p>
     This is API contains methods to get the Warframe data that is available from <a
-        href="http://warframe.wikia.com/wiki/WARFRAME_Wiki">Warframe Wikia</a>.<br>
+        href="https://warframe.fandom.com/">Warframe Wiki</a>.<br>
     To use the data you can make a GET request to this site with url that is listed in Table 1.
 </p>
 <label for="apiTable">Table 1. Api urls.</label>
@@ -60,7 +60,7 @@
     {{#each apiUrls}}
         <tr>
             <td><a href="{{this.url}}">{{this.url}}</a></td>
-            <td><a href="http://warframe.wikia.com/{{this.module}}">{{this.module}}</a></td>
+            <td><a href="https://warframe.fandom.com/wiki/{{this.module}}">{{this.module}}</a></td>
             <td><a href="{{this.url}}/meta">{{this.url}}/meta</a></td>
         </tr>
     {{/each}}
@@ -139,11 +139,15 @@
     {{/each}}
 </table>
 
-<h1>Licensing</h1>
+<h2>Source</h1>
+
+<p>Source can be found from GitHub: <a href="https://github.com/Snekw/Wf">https://github.com/Snekw/Wf</a></p>
+
+<h2>Licensing</h1>
 <p>
     The source code for this API is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.txt">GPL-3.0</a>.
     All of the data under routes that end in -wiki are licensed
     under <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a>.<br><br>
-    This project in no way affiliated with either Warframe Wikia or Digital Extremes.
+    This project in no way affiliated with either Warframe Wiki or Digital Extremes.
 </p>
 </body>
