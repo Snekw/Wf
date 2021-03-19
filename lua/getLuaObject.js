@@ -33,6 +33,12 @@ function getData (input) {
     // Change the sparse arrays that can contain a negative index to string keys.
     let r = /\[([-\d]{1,2})\]/g;
     input = input.replace(r, '["$1"]');
+    let removeNull = /local null = {}.*$/gim;
+    input = input.replace(removeNull, '');
+    let removeNull2 = /null = null.*$/gim;
+    input = input.replace(removeNull2, '');
+    let removeComments = /--.*$/gim;
+    input = input.replace(removeComments, '');
 
     luaToJson.stderr.pipe(process.stderr);
     luaToJson.stdin.setEncoding('utf-8');
