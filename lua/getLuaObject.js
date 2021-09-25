@@ -41,6 +41,8 @@ function getData(input) {
     input = input.replace(removeComments, "");
     let replaceModuleShared = /require\(\'Module:Shared\'\)/gim;
     input = input.replace(replaceModuleShared, "require('shared')");
+    let replaceModuleTable = /require\(\'Module:Table\'\)/gim;
+    input = input.replace(replaceModuleTable, "require('module_table')");
     let replaceVersion2 = /return VersionData/gim;
     input = input.replace(
       replaceVersion2,
