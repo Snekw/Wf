@@ -21,7 +21,7 @@
 const spawn = require("child_process").spawn;
 const CustomError = require("../error").CustomError;
 
-function getData(input) {
+function getData(input, dependencies) {
   return new Promise((resolve, reject) => {
     let luaCmd = "lua5.3";
     let luaParams = ["./luaObjectToJson.lua"];
@@ -43,6 +43,20 @@ function getData(input) {
     input = input.replace(replaceModuleShared, "require('shared')");
     let replaceModuleTable = /require\(\'Module:Table\'\)/gim;
     input = input.replace(replaceModuleTable, "require('module_table')");
+
+    // dependency to "Warframes" cache from "WarframesConclave" cache
+    if (dependencies) {
+      let replaceDependency = /mw\.loadData\([\'\"](.*)[\'\"]\)/gim;
+      let result;
+      while ((result = replaceDependency.exec(input)) !== null) {
+        const dependency = dependencies.find((v) => v.module === result[1]);
+        input = input.replace(
+          `mw.loadData('${dependency.module}')`,
+          dependency.cache.src.replace('return', '')
+        );
+      }
+    }
+
     let replaceVersion2 = /return VersionData/gim;
     input = input.replace(
       replaceVersion2,
@@ -63,7 +77,10 @@ end
       MissionData.vars = nil
       return MissionData`
     );
-    input = input.replace(/MissionData.vars\n\s*{\n\s*'Node',\n\s*'Enemy',\n\s*'Planet',\n\s*'Type',\n\s*'Tileset',\n\s*'Tier',\n\s*'LinkName',\n\s*'Drops',\n\s*'Pic',\n\s*'ObjectiveDetails',\n\s*}/gim, 'MissionData.vars');
+    input = input.replace(
+      /MissionData.vars\n\s*{\n\s*'Node',\n\s*'Enemy',\n\s*'Planet',\n\s*'Type',\n\s*'Tileset',\n\s*'Tier',\n\s*'LinkName',\n\s*'Drops',\n\s*'Pic',\n\s*'ObjectiveDetails',\n\s*}/gim,
+      "MissionData.vars"
+    );
 
     luaToJson.stderr.pipe(process.stderr);
     luaToJson.stdin.setEncoding("utf-8");

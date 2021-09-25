@@ -46,14 +46,15 @@ const wfArcaneDataUrl = baseUrl + query + 'Module%3AArcane%2Fdata';
 const wfSyndicatesDataUrl = baseUrl + query + 'Module%3ASyndicates%2Fdata';
 
 // The object that contains all of the cache modules and is used to generate routes.
+const warframesCache = new Cache(wfWarframeDataUrl, 'Warframes')
 let cache = {
   weapons: new Cache(wfWeaponsDataUrl, 'Weapons'),
   mods: new Cache(wfModsDataUrl, 'Mods'),
   icon: new Cache(wfIconDataUrl, 'Icon'),
   void: new Cache(wfVoidDataUrl, 'Void'),
   version: new Cache(wfVersionDataUrl, 'Version'),
-  warframes: new Cache(wfWarframeDataUrl, 'Warframes'),
-  warframesConclave: new Cache(wfWarframeConclaveDataUrl, 'Warframes/Conclave'),
+  warframes: warframesCache,
+  warframesConclave: new Cache(wfWarframeConclaveDataUrl, 'Warframes/Conclave', [{module:'Module:Warframes/data', cache: warframesCache}]),
   ability: new Cache(wfAbilityDataUrl, 'Ability'),
   focus: new Cache(wfFocusDataUrl, 'Focus'),
   missions: new Cache(wfMissionsDataUrl, 'Missions'),
