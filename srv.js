@@ -64,8 +64,7 @@ let cache = {
 };
 
 // Get the latest git commit short hash.
-const version = require('child_process')
-  .execSync('git rev-parse --short HEAD')
+const version = process.env.GIT_COMMIT
   .toString().trim();
 
 // Stats recording

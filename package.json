@@ -4,12 +4,14 @@
   "description": "Snekw was too lazy to implement lua to json parser in javascript so he made a api to get it with the help of Lua.\"",
   "main": "srv.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node srv.js",
+    "build:docker": "docker build --build-arg GIT_COMMIT=$(git rev-parse HEAD) . -t snekw/wf"
   },
   "author": "Ilkka Kuosmanen",
   "license": "GPL-3.0",
   "dependencies": {
-    "express": "^4.16.3",
-    "hbs": "^4.0.1"
+    "express": "^4.17.2",
+    "hbs": "^4.2.0"
   }
 }
