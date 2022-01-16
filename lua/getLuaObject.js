@@ -37,12 +37,18 @@ function getData(input, dependencies) {
     input = input.replace(removeNull, "");
     let removeNull2 = /null = null.*$/gim;
     input = input.replace(removeNull2, "");
+    let removeWikiCommentBlock = /--\s?\[=+\[(?:.|\n)*?--]=+]/gim;
+    input = input.replace(removeWikiCommentBlock, "");
     let removeComments = /--.*$/gim;
     input = input.replace(removeComments, "");
     let replaceModuleShared = /require\(\'Module:Shared\'\)/gim;
     input = input.replace(replaceModuleShared, "require('shared')");
     let replaceModuleTable = /require\(\'Module:Table\'\)/gim;
     input = input.replace(replaceModuleTable, "require('module_table')");
+
+    // Special fixes to weapon data table... I expect these to break rather soon.....
+    input = input.replace(`local attack = weaponEntry['Attack'..i] or weaponEntry.attack[i]`, `local attack = weaponEntry['Attack'..i]`)
+    input = input.replace(`weaponEntry['Attack'..i], weaponEntry.attack[i] = attack, attack`, `weaponEntry['Attack'..i] = attack`)
 
     // dependency to "Warframes" cache from "WarframesConclave" cache
     if (dependencies) {

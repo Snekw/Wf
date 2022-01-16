@@ -3,3 +3,5 @@ node_modules
 /**/*.exe
 /**/*.dll
 data.lua
+data*.lua
+*.log
