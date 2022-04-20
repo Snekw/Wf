@@ -47,8 +47,14 @@ function getData(input, dependencies) {
     input = input.replace(replaceModuleTable, "require('module_table')");
 
     // Special fixes to weapon data table... I expect these to break rather soon.....
-    input = input.replace(`local attack = weaponEntry['Attack'..i] or weaponEntry.attack[i]`, `local attack = weaponEntry['Attack'..i]`)
-    input = input.replace(`weaponEntry['Attack'..i], weaponEntry.attack[i] = attack, attack`, `weaponEntry['Attack'..i] = attack`)
+    input = input.replace(
+      `local attack = weaponEntry['Attack'..i] or weaponEntry.attack[i]`,
+      `local attack = weaponEntry['Attack'..i]`
+    );
+    input = input.replace(
+      `weaponEntry['Attack'..i], weaponEntry.attack[i] = attack, attack`,
+      `weaponEntry['Attack'..i] = attack`
+    );
 
     // dependency to "Warframes" cache from "WarframesConclave" cache
     if (dependencies) {
@@ -58,7 +64,7 @@ function getData(input, dependencies) {
         const dependency = dependencies.find((v) => v.module === result[1]);
         input = input.replace(
           `mw.loadData('${dependency.module}')`,
-          dependency.cache.src.replace('return', '')
+          dependency.cache.src.replace("return", "")
         );
       }
     }
@@ -121,4 +127,49 @@ end
   });
 }
 
-module.exports = getData;
+function getDataNoClean(input) {
+  return new Promise((resolve, reject) => {
+    let luaCmd = "lua5.3";
+    let luaParams = ["./luaObjectToJson.lua"];
+    if (process.platform === "win32") {
+      luaCmd = "./lua53.exe";
+    }
+    let luaToJson = spawn(luaCmd, luaParams, { cwd: __dirname });
+
+    luaToJson.stderr.pipe(process.stderr);
+    luaToJson.stdin.setEncoding("utf-8");
+    luaToJson.stdin.write(input);
+    luaToJson.stdin.end();
+
+    let data = "";
+    luaToJson.stdout.on("data", (d) => {
+      data += d;
+    });
+    let err = "";
+    luaToJson.stderr.on("data", (d) => {
+      err += d;
+    });
+    luaToJson.stderr.on("end", (d) => {
+      if (err.length > 0) {
+        return reject(err);
+      }
+    });
+    luaToJson.stdout.on("end", (c) => {
+      let d = "";
+      if (data.length === 0) {
+        return reject(new CustomError("Lua parsing failed."));
+      }
+      try {
+        d = JSON.parse(data);
+        return resolve(d);
+      } catch (e) {
+        return reject(e);
+      }
+    });
+  });
+}
+
+module.exports = {
+  getData,
+  getDataNoClean,
+};

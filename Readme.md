@@ -58,10 +58,8 @@ Example return for `/weapons-wiki`:
 ```json
 {
     "data": {
-      "Augments": [{}, {}],
-      "IgnoreInCount": ["", ""],
-      "Stances": [{}, {}],
-      "Weapons": [{}, {}]
+      "Supra Vandal": {},
+      "IronBride": {},
     },
     "meta": {
         "nRefresh": 1,
