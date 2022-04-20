@@ -11,7 +11,7 @@
   "author": "Ilkka Kuosmanen",
   "license": "GPL-3.0",
   "dependencies": {
-    "express": "^4.17.2",
+    "express": "^4.17.3",
     "hbs": "^4.2.0"
   }
 }
