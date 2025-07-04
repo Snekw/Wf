@@ -1,3 +1,15 @@
+# End of Life.
+
+After 7 years of service, it's time for this service to dissapear. Thank you for those who have used the service. <3
+
+The move to https://wiki.warframe.com, while amazing that it happened, is not something I'm willing to adapt this API for.
+I can no longer access the scribunto-console that I needed to convert the wiki data from Lua tables to JSON.
+This thing has broken down so many times over the years. The scribunto-console access resolved most of the common reasons.
+Now it looks like I would need to go back to the old style of converting it on my end instead.
+I don't have the motivation to do so. So, it's time to sunset this project.
+
+![farewell](./farewell.webp)
+
 # Random Warframe data api
 
 Random set of Warframe data API endpoints that retrieve data from the [Warframe Wiki.](https://warframe.fandom.com/)
